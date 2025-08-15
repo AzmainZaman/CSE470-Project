@@ -10,15 +10,15 @@ const Navbar = () => {
     <div
       className={`h-[10%] overflow-hidden ${
         theme
-          ? "bg-[#dddddd] border-[#cccccc] border-b-[1px]"
-          : "bg-blue-900 border-[#222222] border-b-[1px]"
+          ? "bg-[#7f0000]"
+          : "bg-orange-600"
       }`}
     >
       <div className="w-[40%] ml-[5%] h-full float-left flex justify-start items-center">
         <Link href="/">
           <div
             className={`text-[15px] sm:text-[18px] md:text-[22px] lg:text-[25px] xl:text-[30px] 2xl:text-[35px] font-bold text-left ${
-              theme ? "text-[#222222]" : "text-[#dadada]"
+              theme ? "text-white" : "text-white"
             }`}
           >
             Library Management System

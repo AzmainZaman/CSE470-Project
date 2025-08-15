@@ -11,7 +11,9 @@ import {
   updateUser,
   changePassword,
   changePhoto,
-  upDateDays,
+  updateBook,
+  changeBookPhoto,
+  deleteBook,
 } from "@/db/queries";
 import { redirect } from "next/navigation";
 
@@ -23,7 +25,12 @@ async function registerUser(formData) {
 
 async function createBook2(formData) {
   await dbConnect();
-  const created = await createBook(formData);
+  try {
+    const created = await createBook(formData);
+    return created;
+  } catch (error) {
+    throw new Error(`Failed to create book: ${error.message}`);
+  }
 }
 
 async function getAllUsers2() {
@@ -32,17 +39,17 @@ async function getAllUsers2() {
     const users = await getAllUsers();
     return users;
   } catch (error) {
-    throw error;
+    throw new Error(`Failed to fetch users: ${error.message}`);
   }
 }
 
 async function getAllBooks2() {
   try {
     await dbConnect();
-    const users = await getAllBooks();
-    return users;
+    const books = await getAllBooks();
+    return books;
   } catch (error) {
-    throw error;
+    throw new Error(`Failed to fetch books: ${error.message}`);
   }
 }
 
@@ -52,7 +59,7 @@ async function performLogin(formData) {
     const found = await findUserByCredentials(formData);
     return found;
   } catch (error) {
-    throw error;
+    throw new Error(`Login failed: ${error.message}`);
   }
 }
 
@@ -62,7 +69,47 @@ async function callUpdateUser(email, name, phone, bio) {
     await updateUser(email, name, phone, bio);
     revalidatePath("/");
   } catch (error) {
-    throw error;
+    throw new Error(`Failed to update user: ${error.message}`);
+  }
+}
+
+async function callUpdateBook(
+  id,
+  title,
+  author,
+  genre,
+  description,
+  rating,
+  inventory,
+  photo,
+  isBorrowed
+) {
+  await dbConnect();
+  try {
+    await updateBook(id, title, author, genre, description, rating, inventory, photo, isBorrowed);
+    revalidatePath("/");
+  } catch (error) {
+    throw new Error(`Failed to update book: ${error.message}`);
+  }
+}
+
+async function callChangeBookPhoto(id, photo) {
+  await dbConnect();
+  try {
+    await changeBookPhoto(id, photo);
+    revalidatePath("/");
+  } catch (error) {
+    throw new Error(`Failed to update book photo: ${error.message}`);
+  }
+}
+
+async function callDeleteBook(id) {
+  await dbConnect();
+  try {
+    await deleteBook(id);
+    revalidatePath("/");
+  } catch (error) {
+    throw new Error(`Failed to delete book: ${error.message}`);
   }
 }
 
@@ -72,17 +119,7 @@ async function callChangePassword(email, password) {
     await changePassword(email, password);
     redirect("/");
   } catch (error) {
-    throw error;
-  }
-}
-
-async function callUpdateDays(email, days) {
-  await dbConnect();
-  try {
-    await upDateDays(email, days);
-    redirect("/");
-  } catch (error) {
-    throw error;
+    throw new Error(`Failed to change password: ${error.message}`);
   }
 }
 
@@ -92,7 +129,7 @@ async function callChangePhoto(email, photo) {
     await changePhoto(email, photo);
     redirect("/profile");
   } catch (error) {
-    throw error;
+    throw new Error(`Failed to change photo: ${error.message}`);
   }
 }
 
@@ -105,5 +142,7 @@ export {
   callUpdateUser,
   callChangePassword,
   callChangePhoto,
-  callUpdateDays,
+  callUpdateBook,
+  callChangeBookPhoto,
+  callDeleteBook,
 };

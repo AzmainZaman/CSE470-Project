@@ -1,0 +1,45 @@
+"use client";
+import { useAuth } from "@/app/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+
+export default function EachBookCard({ book }) {
+  const router = useRouter();
+  const { auth, setBook } = useAuth();
+
+  const handleCardClick = () => {
+    setBook(book)
+    if (auth?.userType === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/user");
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      onClick={handleCardClick}
+      className="bg-gray-50 rounded-lg overflow-hidden cursor-pointer w-[18%] mx-[1%] float-left border-[1px] border-[#676767] mb-5"
+    >
+      <div className="w-full aspect-[2/3] bg-gray-200 flex items-center justify-center">
+        {book.photo ? (
+          <img
+            src={book.photo}
+            alt={book.title || "Book cover"}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="text-xl sm:text-2xl font-semibold text-gray-500">?</div>
+        )}
+      </div>
+      <div className="p-2 sm:p-3">
+        <h3 className="text-sm sm:text-base font-semibold text-gray-900 truncate">
+          {book.title || "Untitled"}
+        </h3>
+      </div>
+    </motion.div>
+  );
+}
