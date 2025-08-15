@@ -9,7 +9,7 @@ const bookSchema = new Schema({
   rating: { type: Number, required: false, default: 0 },
   inventory: { type: Number, required: false, default: 0 },
   photo: { type: String, required: false, default: "" },
-  isBorrowed: { type: Boolean, required: false, default: false },
+  isBorrowed: { type: Number, required: false, default: 0 },
 });
 
 export const booksModel = mongoose.models?.books || mongoose.model("books", bookSchema);

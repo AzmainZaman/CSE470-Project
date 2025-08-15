@@ -108,6 +108,39 @@ async function changePhoto(email, photo) {
   await userModel.updateOne({ email: email }, { $set: { photo: photo } });
 }
 
+async function changeIsBorrowed(id, isBorrowed) {
+  console.log("Updating isBorrowed for book ID:", id, "to:", isBorrowed);
+  const result = await booksModel.updateOne(
+    { id: String(id) },
+    { $set: { isBorrowed: Number(isBorrowed) } }
+  );
+  console.log("Update isBorrowed result:", result);
+  if (result.matchedCount === 0) {
+    throw new Error(`No book found with ID: ${id}`);
+  }
+}
+
+async function changeBorrowedBooks(email, borrowedBooks) {
+  console.log("Updating borrowedBooks for email:", email, "to:", borrowedBooks);
+  const result = await userModel.updateOne(
+    { email: email },
+    {
+      $set: {
+        borrowedBooks: Array.isArray(borrowedBooks) ? borrowedBooks.map(book => ({
+          bookId: String(book.bookId),
+          borrowedDate: String(book.borrowedDate),
+          title: String(book.title || ""),
+          photo: String(book.photo || ""),
+        })) : [],
+      },
+    }
+  );
+  console.log("Update borrowedBooks result:", result);
+  if (result.matchedCount === 0) {
+    throw new Error(`No user found with email: ${email}`);
+  }
+}
+
 export {
   createUser,
   createBook,
@@ -121,4 +154,6 @@ export {
   updateBook,
   changeBookPhoto,
   deleteBook,
+  changeBorrowedBooks,
+  changeIsBorrowed
 };

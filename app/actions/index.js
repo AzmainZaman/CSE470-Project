@@ -14,6 +14,8 @@ import {
   updateBook,
   changeBookPhoto,
   deleteBook,
+  changeBorrowedBooks,
+  changeIsBorrowed
 } from "@/db/queries";
 import { redirect } from "next/navigation";
 
@@ -133,6 +135,28 @@ async function callChangePhoto(email, photo) {
   }
 }
 
+async function updateIsBorrowed(id, isBorrowed) {
+  await dbConnect();
+  try {
+    await changeIsBorrowed(id, isBorrowed);
+    revalidatePath("/user");
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: `Failed to update isBorrowed: ${error.message}` };
+  }
+}
+
+async function updateBorrowedBooks(email, borrowedBooks) {
+  await dbConnect();
+  try {
+    await changeBorrowedBooks(email, borrowedBooks);
+    revalidatePath("/user");
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: `Failed to update borrowed books: ${error.message}` };
+  }
+}
+
 export {
   registerUser,
   getAllBooks2,
@@ -145,4 +169,6 @@ export {
   callUpdateBook,
   callChangeBookPhoto,
   callDeleteBook,
+  updateBorrowedBooks,
+  updateIsBorrowed
 };

@@ -29,6 +29,11 @@ const userSchema = new Schema({
     required: false,
     type: String,
   },
+
+  borrowedBooks:{
+    required: false,
+    type: Array,
+  }
 });
 
 // Export the model, checking if it already exists to avoid redefinition

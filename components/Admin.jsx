@@ -144,7 +144,7 @@ export default function Admin() {
       rating: Number(rating) || 0,
       inventory: Number(inventory) || 0,
       photo: newPhoto || "",
-      isBorrowed: false,
+      isBorrowed: 0,
     };
     console.log("Submitting book data:", bookData);
 
@@ -244,7 +244,7 @@ export default function Admin() {
   };
 
   const handleDelete = async (book) => {
-    if (book.isBorrowed) {
+    if (book.isBorrowed > 0) {
       setFeedback("Cannot delete a borrowed book!");
       return;
     }
@@ -626,7 +626,7 @@ export default function Admin() {
                       {book.inventory ?? "0"}
                     </td>
                     <td className="border-b border-gray-300 p-3">
-                      {book.isBorrowed ? "Yes" : "No"}
+                      {book.isBorrowed ? book.isBorrowed : book.isBorrowed}
                     </td>
                     <td className="border-b border-gray-300 p-3">
                       <div className="flex items-center space-x-2">
@@ -690,7 +690,6 @@ export default function Admin() {
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleDelete(book)}
                         className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md transition duration-200"
-                        disabled={book.isBorrowed}
                       >
                         Delete
                       </motion.button>
